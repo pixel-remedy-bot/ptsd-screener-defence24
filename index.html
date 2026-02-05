@@ -71,46 +71,32 @@
 
         .card:hover { transform: translateY(-2px); }
 
-        .logo {
+        .header-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 0 8px;
         }
 
-        .logo svg {
-            width: 44px;
-            height: 44px;
-        }
-
-        .logo-text {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 60px;
-            right: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50%;
+        .header-logo svg {
             width: 48px;
             height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--glass-shadow);
-            z-index: 100;
-            font-size: 20px;
+            flex-shrink: 0;
         }
 
-        .theme-toggle:hover { transform: scale(1.1); }
+        .header-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: #46b7c6;
+            line-height: 1.2;
+        }
+
+        .header-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
         h1 {
             font-size: 26px;
@@ -261,10 +247,10 @@
 
         .disclaimer-box {
             background: rgba(245, 158, 11, 0.08);
-            border-left: 4px solid var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
             padding: 20px;
             margin-bottom: 24px;
-            border-radius: 0 16px 16px 0;
+            border-radius: 16px;
             font-size: 14px;
             color: var(--text-secondary);
             line-height: 1.6;
@@ -295,6 +281,8 @@
             height: 20px;
             margin-top: 2px;
             accent-color: var(--primary);
+            border: 2px solid white;
+            border-radius: 4px;
         }
 
         .checkbox-wrap span {
@@ -398,33 +386,33 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw">
-        <span id="theme-icon">🌙</span>
-    </button>
-
     <div class="container">
-        <!-- START -->
-        <div id="screen-start" class="screen active">
-            <div class="card">
-                <div class="logo">
-                    <svg width="48" height="48" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2">
-                        <g transform="matrix(1,0,0,1,-11976,-39791)">
-                            <g transform="matrix(0.0071,0,0,0.0071,11976.8,39791.7)">
-                                <rect x="0" y="0" width="8333.33" height="8333.33" style="fill:none"/>
-                                <clipPath id="_clip1_saved">
-                                    <rect x="0" y="0" width="8333.33" height="8333.33"/>
-                                </clipPath>
-                                <g clip-path="url(#_clip1_saved)">
-                                    <g transform="matrix(34.5223,0,0,34.5223,-9340.42,-30355.4)">
-                                        <g transform="matrix(0.0445642,0,0,0.0445642,270.562,-383.355)">
-                                            <path d="M4791.67,30041.6C4791.67,29356.8 4224.22,28891 3638.37,28891L1190.78,28891L1190.78,29254.8L3638.37,29254.8C4122.37,29254.8 4421.56,29617.5 4421.56,30041.6C4421.56,30465.8 4122.37,30824.6 3638.37,30824.6L2435.27,30824.6L2435.27,31188.1L2633.59,31188.1L4107.28,33192.3L4531.33,33192.3L3079.39,31188.1L3638.37,31188.1C4224.22,31188.1 4791.67,30726.4 4791.67,30041.6ZM1547.34,30825.1L1547.34,30266.4L1183.67,30266.4L1183.67,30825.1L625,30825.1L625,31188.8L1183.67,31188.8L1183.67,31747.4L1547.34,31747.4L1547.34,31188.8L2106.01,31188.8L2106.01,30825.1L1547.34,30825.1Z" style="fill:rgb(71,183,198);fill-rule:nonzero"/>
-                                        </g>
-                                    </g>
+        <div class="header-logo">
+            <svg width="48" height="48" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2">
+                <g transform="matrix(1,0,0,1,-11976,-39791)">
+                    <g transform="matrix(0.0071,0,0,0.0071,11976.8,39791.7)">
+                        <rect x="0" y="0" width="8333.33" height="8333.33" style="fill:none"/>
+                        <clipPath id="_clip1_saved">
+                            <rect x="0" y="0" width="8333.33" height="8333.33"/>
+                        </clipPath>
+                        <g clip-path="url(#_clip1_saved)">
+                            <g transform="matrix(34.5223,0,0,34.5223,-9340.42,-30355.4)">
+                                <g transform="matrix(0.0445642,0,0,0.0445642,270.562,-383.355)">
+                                    <path d="M4791.67,30041.6C4791.67,29356.8 4224.22,28891 3638.37,28891L1190.78,28891L1190.78,29254.8L3638.37,29254.8C4122.37,29254.8 4421.56,29617.5 4421.56,30041.6C4421.56,30465.8 4122.37,30824.6 3638.37,30824.6L2435.27,30824.6L2435.27,31188.1L2633.59,31188.1L4107.28,33192.3L4531.33,33192.3L3079.39,31188.1L3638.37,31188.1C4224.22,31188.1 4791.67,30726.4 4791.67,30041.6ZM1547.34,30825.1L1547.34,30266.4L1183.67,30266.4L1183.67,30825.1L625,30825.1L625,31188.8L1183.67,31188.8L1183.67,31747.4L1547.34,31747.4L1547.34,31188.8L2106.01,31188.8L2106.01,30825.1L1547.34,30825.1Z" style="fill:rgb(71,183,198);fill-rule:nonzero"/>
                                 </g>
                             </g>
                         </g>
-                    </svg>
-                </div>
+                    </g>
+                </g>
+            </svg>
+            <div class="header-text">
+                <div class="header-brand">Remedy</div>
+                <div class="header-sub">Centrum Psychiatrii i Psychoterapii</div>
+            </div>
+        </div>
+        <!-- START -->
+        <div id="screen-start" class="screen active">
+            <div class="card">
                 <h1>Screening PTSD dla służb mundurowych</h1>
                 <p class="subtitle">
                     Krótkie narzędzie przesiewowe do oceny ryzyka zaburzenia stresu pourazowego. 
@@ -445,7 +433,7 @@
                     <strong>Uwaga:</strong> To narzędzie ma charakter wyłącznie informacyjny. 
                     Nie stanowi diagnozy medycznej ani nie zastępuje konsultacji z lekarzem.
                 </div>
-                <div class="disclaimer-box" style="background: rgba(220, 38, 38, 0.08); border-color: #dc2626;">
+                <div class="disclaimer-box" style="background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.3);">
                     <strong>Kryzys:</strong> Jeśli masz myśli samobójcze - zadzwoń na 112 lub 116 123.
                 </div>
                 <label class="checkbox-wrap">
@@ -614,21 +602,6 @@
 
     <script>
         let answers = {};
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
-        }
-
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        }
 
         function startScreening() {
             showScreen('disclaimer');
