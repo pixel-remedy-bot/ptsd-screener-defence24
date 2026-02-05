@@ -7,30 +7,182 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center}
-        .banner{background:linear-gradient(135deg,#fff 0%,#f5f7fa 100%);border:2px solid #46b7c6;border-radius:12px;padding:20px;max-width:400px;margin:20px;cursor:pointer}
+        .banner{background:linear-gradient(135deg,#fff 0%,#f5f7fa 100%);border:2px solid #46b7c6;border-radius:12px;padding:20px;max-width:400px;margin:20px;cursor:pointer;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
         .banner:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.1)}
         .header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
         .icon{width:48px;height:48px;background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px}
         .title{font-size:18px;font-weight:700}
         .subtitle{font-size:14px;color:#4a5568;margin-bottom:16px}
-        button{background:#46b7c6;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
-        button:hover{background:#3a9aa7}
+        .cta-btn{background:#46b7c6;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
+        .cta-btn:hover{background:#3a9aa7}
         .disclaimer{font-size:11px;color:#718096;text-align:center;margin-top:12px}
+        .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:10000;padding:20px}
+        .modal-overlay.active{display:flex}
+        .modal{background:white;border-radius:12px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+        .modal-header{background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);color:white;padding:20px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
+        .modal-close{background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px}
+        .modal-content{padding:24px}
+        .warning-box{background:#fef3c7;border-left:4px solid #f59e0b;padding:16px;margin-bottom:20px;border-radius:0 8px 8px 0}
+        .warning-title{font-weight:700;color:#d97706;margin-bottom:8px}
+        .btn-primary{background:#46b7c6;color:white;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;width:100%}
+        .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+        .btn-secondary{background:#f5f7fa;color:#4a5568;border:1px solid #e2e8f0;padding:14px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;flex:1}
+        .progress-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-bottom:8px}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#46b7c6 0%,#5ec5d1 100%)}
+        .question{font-size:17px;font-weight:600;margin-bottom:24px;line-height:1.5}
+        .answer-buttons{display:flex;gap:16px;margin-bottom:24px}
+        .answer-btn{flex:1;padding:20px;border:2px solid #e2e8f0;background:white;border-radius:8px;cursor:pointer;text-align:center;font-weight:600;font-size:16px}
+        .answer-btn:hover{border-color:#46b7c6;background:rgba(70,183,198,0.05)}
+        .hidden{display:none !important}
+        .results{text-align:center}
+        .results-icon{width:80px;height:80px;background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:40px;color:white}
+        .results-title{font-size:24px;font-weight:700;margin-bottom:16px}
+        .results-message{background:#f5f7fa;padding:20px;border-radius:8px;margin-bottom:24px;font-size:15px;color:#4a5568;line-height:1.7}
+        .results-cta{display:block;background:#46b7c6;color:white;padding:16px;border-radius:8px;text-decoration:none;font-weight:600;margin-bottom:12px}
+        .help-link{display:block;background:#f5f7fa;color:#46b7c6;padding:14px;border-radius:8px;text-decoration:none;font-weight:600;margin-bottom:12px}
+        @media(max-width:480px){.modal-overlay{padding:0;align-items:flex-end}.modal{border-radius:12px 12px 0 0}.answer-buttons{flex-direction:column}}
     </style>
 </head>
 <body>
-    <div class="banner" onclick="start()">
-        <div style="height:4px;background:repeating-linear-gradient(90deg,#46b7c6 0px,#46b7c6 20px,#3a9aa7 20px,#3a9aa7 40px)"><\/div>
+    <div class="banner" onclick="openModal()">
+        <div style="height:4px;background:repeating-linear-gradient(90deg,#46b7c6 0px,#46b7c6 20px,#3a9aa7 20px,#3a9aa7 40px)"></div>
         <div class="header">
-            <div class="icon">🛡️<\/div>
+            <div class="icon">🛡️</div>
             <div>
-                <div class="title">Sprawdź swoje samopoczucie<\/div>
-                <div class="subtitle">2-minutowy kwestionariusz dla służb mundurowych<\/div>
-            <\/div>
-        <\/div>
-        <button>Rozpocznij<\/button>
-        <div class="disclaimer">Kwestionariusz edukacyjny • Nie zastępuje konsultacji lekarskiej<\/div>
-    <\/div>
-    <script>function start(){alert('Aplikacja działa! Kliknij OK aby przejść do kwestionariusza.');location.reload()}<\/script>
-<\/body>
-<\/html>
+                <div class="title">Sprawdź swoje samopoczucie</div>
+                <div class="subtitle">2-minutowy kwestionariusz dla służb mundurowych</div>
+            </div>
+        </div>
+        <button class="cta-btn">Rozpocznij</button>
+        <div class="disclaimer">Kwestionariusz edukacyjny • Nie zastępuje konsultacji lekarskiej</div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span style="font-size:18px;font-weight:700">🛡️ Screener PTSD</span>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content">
+                <div id="screen-disclaimer">
+                    <div class="warning-box">
+                        <div class="warning-title">⚠️ Ważne informacje</div>
+                        <div style="font-size:14px;color:#4a5568;line-height:1.6">
+                            <strong>Ten kwestionariusz ma charakter wyłącznie edukacyjny i informacyjny.</strong><br><br>
+                            Nie stanowi diagnozy medycznej ani porady lekarskiej. Nie zastępuje konsultacji z lekarzem, psychiatrą ani psychologiem.
+                        </div>
+                    </div>
+                    <label style="display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;cursor:pointer;padding:16px;background:#f5f7fa;border-radius:8px">
+                        <input type="checkbox" id="accept-check" style="margin-top:3px" onchange="document.getElementById('continue-btn').disabled=!this.checked">
+                        <span style="font-size:14px">Rozumiem i akceptuję, że ten kwestionariusz nie jest narzędziem diagnostycznym.</span>
+                    </label>
+                    <button id="continue-btn" class="btn-primary" onclick="showScreen('trauma')" disabled>Przejdź do pytań</button>
+                </div>
+
+                <div id="screen-trauma" class="hidden">
+                    <div style="text-align:center;padding:20px 0">
+                        <div style="font-size:48px;margin-bottom:16px">🎖️</div>
+                        <p style="font-size:16px;color:#4a5568;line-height:1.6;margin-bottom:24px">
+                            Czy w pewnym momencie swojego życia doświadczyłeś/aś zdarzenia, w którym mogłeś/aś zginąć, zostać poważnie ranny/a, lub być świadkiem czegoś takiego?
+                        </p>
+                        <div class="answer-buttons">
+                            <button class="answer-btn" onclick="showScreen('q1')">TAK</button>
+                            <button class="answer-btn" onclick="showScreen('results')">NIE</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="screen-q1" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 1 z 5</div>
+                    <p style="font-size:15px;color:#4a5568;margin-bottom:8px">W ostatnim miesiącu...</p>
+                    <div class="question">Czy masz wspomnienia, myśli lub obrazy, które wracają do Ciebie bez kontroli, dotyczące tego zdarzenia?</div>
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="showScreen('q2')">TAK</button>
+                        <button class="answer-btn" onclick="showScreen('q2')">NIE</button>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-secondary" onclick="showScreen('trauma')">← Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-q2" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 2 z 5</div>
+                    <div class="question">Czy masz koszmary senne o tym zdarzeniu?</div>
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="showScreen('q3')">TAK</button>
+                        <button class="answer-btn" onclick="showScreen('q3')">NIE</button>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-secondary" onclick="showScreen('q1')">← Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-q3" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 3 z 5</div>
+                    <div class="question">Czy czujesz się nagle, jakby to zdarzenie działo się znowu lub widzisz je ponownie?</div>
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="showScreen('q4')">TAK</button>
+                        <button class="answer-btn" onclick="showScreen('q4')">NIE</button>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-secondary" onclick="showScreen('q2')">← Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-q4" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 4 z 5</div>
+                    <div class="question">Czy czujesz się bardzo zaniepokojony/a, gdy coś przypomina Ci o tym zdarzeniu?</div>
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="showScreen('q5')">TAK</button>
+                        <button class="answer-btn" onclick="showScreen('q5')">NIE</button>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-secondary" onclick="showScreen('q3')">← Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-q5" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 5 z 5</div>
+                    <div class="question">Czy unikasz myśli, uczuć lub sytuacji, które przypominają Ci o tym zdarzeniu?</div>
+                    <div class="answer-buttons">
+                        <button class="answer-btn" onclick="showScreen('results')">TAK</button>
+                        <button class="answer-btn" onclick="showScreen('results')">NIE</button>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-secondary" onclick="showScreen('q4')">← Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-results" class="hidden">
+                    <div class="results">
+                        <div class="results-icon">✓</div>
+                        <div class="results-title">Dziękujemy za wypełnienie</div>
+                        <div class="results-message">
+                            <strong>Pamiętaj</strong> – ten kwestionariusz <strong>nie stanowi diagnozy</strong>.<br>
+                            Jeśli masz jakiekolwiek wątpliwości dotyczące swojego zdrowia psychicznego, 
+                            <strong>skonsultuj się z lekarzem, psychiatrą lub psychologiem</strong>.
+                        </div>
+                        <a href="https://przykladowy-link.pl/umow-wizyte" class="results-cta" target="_blank">📅 Umów wizytę</a>
+                        <a href="tel:116123" class="help-link">📞 Telefon zaufania: 116 123</a>
+                        <button onclick="resetApp()" style="background:none;border:none;color:#718096;font-size:14px;cursor:pointer;text-decoration:underline;margin-top:16px">Wypełnij ponownie</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(){document.getElementById('modal').classList.add('active');showScreen('disclaimer')}
+        function closeModal(){document.getElementById('modal').classList.remove('active')}
+        function showScreen(id){document.querySelectorAll('[id^="screen-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('screen-'+id)?.classList.remove('hidden')}
+        function resetApp(){document.getElementById('accept-check').checked=false;document.getElementById('continue-btn').disabled=true;showScreen('disclaimer')}
+        document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()})
+        document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()})
+    </script>
+</body>
+</html>
