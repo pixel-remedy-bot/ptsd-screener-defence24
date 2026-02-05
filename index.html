@@ -53,29 +53,10 @@
             50% { background-position: 100% 50%; }
         }
 
-        .crisis-bar {
-            background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            padding: 12px 20px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .crisis-bar.active { display: block; }
-        .crisis-bar a { color: white; text-decoration: underline; font-weight: 700; }
-
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 80px 20px 40px;
+            padding: 40px 20px;
         }
 
         .card {
@@ -146,10 +127,10 @@
 
         .btn {
             width: 100%;
-            padding: 16px 24px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 16px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -260,14 +241,14 @@
         }
 
         .answer-btn {
-            padding: 20px;
+            padding: 14px;
             border: 2px solid var(--glass-border);
             background: var(--glass-bg);
-            border-radius: 16px;
+            border-radius: 12px;
             cursor: pointer;
             text-align: center;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 15px;
             transition: all 0.3s ease;
             color: var(--text-primary);
         }
@@ -417,10 +398,6 @@
     </style>
 </head>
 <body>
-    <div id="crisis-bar" class="crisis-bar">
-        Masz myśli samobójcze? <a href="tel:116123">Zadzwoń 116 123</a> lub <a href="tel:112">112</a>
-    </div>
-
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw">
         <span id="theme-icon">🌙</span>
     </button>
@@ -431,14 +408,11 @@
             <div class="card">
                 <div class="logo">
                     <svg viewBox="0 0 100 100" fill="none">
-                        <rect width="100" height="100" rx="20" fill="url(#logoGrad)"/>
-                        <path d="M35 50 L45 35 L55 50 L65 35 L65 65 L55 50 L45 65 L35 50" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#46b7c6"/>
-                                <stop offset="100%" style="stop-color:#3a9aa7"/>
-                            </linearGradient>
-                        </defs>
+                        <path d="M28.2,46.2C28.2,42.2 30.9,39.5 34.8,39.5L46.7,39.5L46.7,41.2L34.8,41.2C31.7,41.2 30.2,42.8 30.2,46.2C30.2,49.6 31.7,51.2 34.8,51.2L40.2,51.2L40.2,52.8L41.1,52.8L47.6,61.8L49.5,61.8L43,52.8L46.4,52.8C50.4,52.8 53.1,55.1 53.1,59.1C53.1,63.1 50.4,65.5 46.4,65.5L41.1,65.5L41.1,67.1L47.6,76.1L45.7,76.1L39.2,67.1L46.4,67.1C50.4,67.1 53.1,64.9 53.1,60.9C53.1,56.9 50.4,54.6 46.4,54.6L41.1,54.6L41.1,56.2L40.2,56.2L34.8,47.2L33,47.2L38.3,56.2L34.8,56.2C30.9,56.2 28.2,53.5 28.2,49.5L28.2,46.2Z" fill="#46b7c6"/>
+                        <rect x="52.5" y="47.8" width="1.6" height="1.6" fill="#46b7c6"/>
+                        <rect x="54.1" y="47.8" width="1.6" height="1.6" fill="#46b7c6"/>
+                        <rect x="52.5" y="49.4" width="1.6" height="1.6" fill="#46b7c6"/>
+                        <rect x="54.1" y="49.4" width="1.6" height="1.6" fill="#46b7c6"/>
                     </svg>
                     <span class="logo-text">Remedy</span>
                 </div>
@@ -648,7 +622,6 @@
         }
 
         function startScreening() {
-            document.getElementById('crisis-bar').classList.add('active');
             showScreen('disclaimer');
         }
 
