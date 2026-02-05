@@ -3,186 +3,675 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Screener PTSD - Służby Mundurowe</title>
+    <title>Remedy PTSD Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center}
-        .banner{background:linear-gradient(135deg,#fff 0%,#f5f7fa 100%);border:2px solid #46b7c6;border-radius:12px;padding:20px;max-width:400px;margin:20px;cursor:pointer;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
-        .banner:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.1)}
-        .header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-        .icon{width:48px;height:48px;background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px}
-        .title{font-size:18px;font-weight:700}
-        .subtitle{font-size:14px;color:#4a5568;margin-bottom:16px}
-        .cta-btn{background:#46b7c6;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
-        .cta-btn:hover{background:#3a9aa7}
-        .disclaimer{font-size:11px;color:#718096;text-align:center;margin-top:12px}
-        .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:10000;padding:20px}
-        .modal-overlay.active{display:flex}
-        .modal{background:white;border-radius:12px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
-        .modal-header{background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);color:white;padding:20px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
-        .modal-close{background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px}
-        .modal-content{padding:24px}
-        .warning-box{background:#fef3c7;border-left:4px solid #f59e0b;padding:16px;margin-bottom:20px;border-radius:0 8px 8px 0}
-        .warning-title{font-weight:700;color:#d97706;margin-bottom:8px}
-        .btn-primary{background:#46b7c6;color:white;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;width:100%}
-        .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
-        .btn-secondary{background:#f5f7fa;color:#4a5568;border:1px solid #e2e8f0;padding:14px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;flex:1}
-        .progress-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-bottom:8px}
-        .progress-fill{height:100%;background:linear-gradient(90deg,#46b7c6 0%,#5ec5d1 100%)}
-        .question{font-size:17px;font-weight:600;margin-bottom:24px;line-height:1.5}
-        .answer-buttons{display:flex;gap:16px;margin-bottom:24px}
-        .answer-btn{flex:1;padding:20px;border:2px solid #e2e8f0;background:white;border-radius:8px;cursor:pointer;text-align:center;font-weight:600;font-size:16px}
-        .answer-btn:hover{border-color:#46b7c6;background:rgba(70,183,198,0.05)}
-        .hidden{display:none !important}
-        .results{text-align:center}
-        .results-icon{width:80px;height:80px;background:linear-gradient(135deg,#46b7c6 0%,#3a9aa7 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:40px;color:white}
-        .results-title{font-size:24px;font-weight:700;margin-bottom:16px}
-        .results-message{background:#f5f7fa;padding:20px;border-radius:8px;margin-bottom:24px;font-size:15px;color:#4a5568;line-height:1.7}
-        .results-cta{display:block;background:#46b7c6;color:white;padding:16px;border-radius:8px;text-decoration:none;font-weight:600;margin-bottom:12px}
-        .help-link{display:block;background:#f5f7fa;color:#46b7c6;padding:14px;border-radius:8px;text-decoration:none;font-weight:600;margin-bottom:12px}
-        @media(max-width:480px){.modal-overlay{padding:0;align-items:flex-end}.modal{border-radius:12px 12px 0 0}.answer-buttons{flex-direction:column}}
+        :root {
+            --primary: #46b7c6;
+            --primary-dark: #3a9aa7;
+            --primary-light: #5ec5d1;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --bg-gradient-start: #e0f2fe;
+            --bg-gradient-end: #f0f9ff;
+            --surface: rgba(255, 255, 255, 0.72);
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        [data-theme="dark"] {
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
+            --surface: rgba(30, 41, 59, 0.72);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 50%, var(--bg-gradient-start) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--glass-shadow);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(70, 183, 198, 0.15);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(70, 183, 198, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(70, 183, 198, 0.45);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(70, 183, 198, 0.1);
+            border-color: rgba(70, 183, 198, 0.3);
+        }
+
+        .disclaimer {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 12px 12px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 24px 0;
+            padding: 16px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover {
+            background: rgba(70, 183, 198, 0.08);
+        }
+
+        .checkbox-container input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-container span {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--surface);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--glass-bg);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+            font-size: 20px;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .modal-content {
+            padding: 28px;
+        }
+
+        .progress-container {
+            margin-bottom: 24px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--glass-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 3px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .question-context {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            padding: 20px 16px;
+            border: 2px solid var(--glass-border);
+            background: var(--glass-bg);
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .answer-btn:hover {
+            border-color: var(--primary);
+            background: rgba(70, 183, 198, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-buttons .btn {
+            flex: 1;
+        }
+
+        .hidden { display: none !important; }
+
+        .results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .results-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-message {
+            background: var(--glass-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .cta-link {
+            display: block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 16px rgba(70, 183, 198, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .cta-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(70, 183, 198, 0.45);
+        }
+
+        .secondary-link {
+            display: block;
+            background: var(--glass-bg);
+            color: var(--primary);
+            padding: 16px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .secondary-link:hover {
+            background: rgba(70, 183, 198, 0.1);
+            border-color: rgba(70, 183, 198, 0.3);
+        }
+
+        .restart-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            display: block;
+            margin: 20px auto 0;
+            transition: color 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 24px; border-radius: 20px; }
+            .modal { border-radius: 20px 20px 0 0; max-height: 95vh; }
+            .modal-overlay { padding: 0; align-items: flex-end; }
+            .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+            .answer-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 22px; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <div class="banner" onclick="openModal()">
-        <div style="height:4px;background:repeating-linear-gradient(90deg,#46b7c6 0px,#46b7c6 20px,#3a9aa7 20px,#3a9aa7 40px)"></div>
-        <div class="header">
-            <div class="icon">🛡️</div>
-            <div>
-                <div class="title">Sprawdź swoje samopoczucie</div>
-                <div class="subtitle">2-minutowy kwestionariusz dla służb mundurowych</div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg id="sun-icon" viewBox="0 0 24 24"><path d="M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-13.5c.83 0 1.5.67 1.5 1.5v2c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5v-2c0-.83.67-1.5 1.5-1.5zm0 17c-.83 0-1.5.67-1.5 1.5v2c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-2c0-.83-.67-1.5-1.5-1.5zm10.5-8.5c0 .83-.67 1.5-1.5 1.5h-2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h2c.83 0 1.5.67 1.5 1.5zM6 12c0 .83-.67 1.5-1.5 1.5h-2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5h2c.83 0 1.5.67 1.5 1.5zm14.36-6.36c.59.59.59 1.54 0 2.12l-1.42 1.42c-.59.59-1.54.59-2.12 0s-.59-1.54 0-2.12l1.42-1.42c.59-.59 1.54-.59 2.12 0zM5.64 17.66c-.59-.59-.59-1.54 0-2.12l1.42-1.42c.59-.59 1.54-.59 2.12 0s.59 1.54 0 2.12l-1.42 1.42c-.59.58-1.54.58-2.12 0zM18.36 17.66l-1.42-1.42c-.59-.59-1.54-.59-2.12 0s-.59 1.54 0 2.12l1.42 1.42c.59.59 1.54.59 2.12 0 .59-.58.59-1.53 0-2.12zM5.64 6.34c.59-.59 1.54-.59 2.12 0s.59 1.54 0 2.12L6.34 9.88c-.59.59-1.54.59-2.12 0s-.59-1.54 0-2.12l1.42-1.42z"/></svg>
+        <svg id="moon-icon" class="hidden" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+    </button>
+
+    <div class="container">
+        <div class="card" onclick="openModal()">
+            <div class="logo-container">
+                <svg class="logo" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#46b7c6"/>
+                            <stop offset="100%" style="stop-color:#5ec5d1"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="10" y="10" width="80" height="80" rx="20" fill="url(#logoGrad)"/>
+                    <path d="M35 50 L45 35 L55 50 L65 35 L65 65 L55 50 L45 65 L35 50" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <div class="logo-text">Remedy</div>
+                    <div class="tagline">AI Mental Health</div>
+                </div>
+            </div>
+            <h1>Sprawdź swoje samopoczucie</h1>
+            <p class="subtitle">2-minutowy kwestionariusz wsparcia psychicznego dla służb mundurowych</p>
+            <button class="btn btn-primary">Rozpocznij screening</button>
+            <div class="disclaimer">
+                <strong>Uwaga:</strong> Ten kwestionariusz ma charakter wyłącznie edukacyjny i informacyjny. Nie stanowi diagnozy medycznej ani nie zastępuje konsultacji z lekarzem.
             </div>
         </div>
-        <button class="cta-btn">Rozpocznij</button>
-        <div class="disclaimer">Kwestionariusz edukacyjny • Nie zastępuje konsultacji lekarskiej</div>
     </div>
 
-    <div id="modal" class="modal-overlay">
+    <div id="modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
         <div class="modal">
             <div class="modal-header">
-                <span style="font-size:18px;font-weight:700">🛡️ Screener PTSD</span>
-                <button class="modal-close" onclick="closeModal()">×</button>
+                <span class="modal-title">Remedy PTSD Screener</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-content">
-                <div id="screen-disclaimer">
-                    <div class="warning-box">
-                        <div class="warning-title">⚠️ Ważne informacje</div>
-                        <div style="font-size:14px;color:#4a5568;line-height:1.6">
-                            <strong>Ten kwestionariusz ma charakter wyłącznie edukacyjny i informacyjny.</strong><br><br>
-                            Nie stanowi diagnozy medycznej ani porady lekarskiej. Nie zastępuje konsultacji z lekarzem, psychiatrą ani psychologiem.
-                        </div>
+                <div id="screen-disclaimer" class="fade-in">
+                    <div class="disclaimer" style="margin: 0 0 24px 0;">
+                        <strong>Ważne informacje prawne</strong><br><br>
+                        Ten kwestionariusz ma charakter wyłącznie edukacyjny i informacyjny. Nie stanowi diagnozy medycznej ani porady lekarskiej. Nie zastępuje konsultacji z lekarzem, psychiatrą ani psychologiem.
                     </div>
-                    <label style="display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;cursor:pointer;padding:16px;background:#f5f7fa;border-radius:8px">
-                        <input type="checkbox" id="accept-check" style="margin-top:3px" onchange="document.getElementById('continue-btn').disabled=!this.checked">
-                        <span style="font-size:14px">Rozumiem i akceptuję, że ten kwestionariusz nie jest narzędziem diagnostycznym.</span>
+                    <label class="checkbox-container" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="accept-check" onchange="document.getElementById('continue-btn').disabled=!this.checked">
+                        <span>Rozumiem i akceptuję, że ten kwestionariusz nie jest narzędziem diagnostycznym i nie zastępuje konsultacji ze specjalistą.</span>
                     </label>
-                    <button id="continue-btn" class="btn-primary" onclick="showScreen('trauma')" disabled>Przejdź do pytań</button>
+                    <button id="continue-btn" class="btn btn-primary" onclick="showScreen('trauma')" disabled>Kontynuuj</button>
                 </div>
 
-                <div id="screen-trauma" class="hidden">
-                    <div style="text-align:center;padding:20px 0">
-                        <div style="font-size:48px;margin-bottom:16px">🎖️</div>
-                        <p style="font-size:16px;color:#4a5568;line-height:1.6;margin-bottom:24px">
-                            Czy w pewnym momencie swojego życia doświadczyłeś/aś zdarzenia, w którym mogłeś/aś zginąć, zostać poważnie ranny/a, lub być świadkiem czegoś takiego?
-                        </p>
-                        <div class="answer-buttons">
-                            <button class="answer-btn" onclick="showScreen('q1')">TAK</button>
-                            <button class="answer-btn" onclick="showScreen('results')">NIE</button>
-                        </div>
+                <div id="screen-trauma" class="hidden fade-in">
+                    <p class="question">Czy w pewnym momencie swojego życia doświadczyłeś/aś zdarzenia, w którym mogłeś/aś zginąć, zostać poważnie ranny/a, lub być świadkiem czegoś takiego?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('q1')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('results')">Nie</button>
                     </div>
                 </div>
 
-                <div id="screen-q1" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
-                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 1 z 5</div>
-                    <p style="font-size:15px;color:#4a5568;margin-bottom:8px">W ostatnim miesiącu...</p>
-                    <div class="question">Czy masz wspomnienia, myśli lub obrazy, które wracają do Ciebie bez kontroli, dotyczące tego zdarzenia?</div>
-                    <div class="answer-buttons">
-                        <button class="answer-btn" onclick="showScreen('q2')">TAK</button>
-                        <button class="answer-btn" onclick="showScreen('q2')">NIE</button>
+                <div id="screen-q1" class="hidden fade-in">
+                    <div class="progress-container">
+                        <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+                        <div class="progress-text">Pytanie 1 z 5</div>
                     </div>
-                    <div style="display:flex;gap:12px">
-                        <button class="btn-secondary" onclick="showScreen('trauma')">← Wstecz</button>
+                    <p class="question-context">W ostatnim miesiącu...</p>
+                    <p class="question">Czy masz wspomnienia, myśli lub obrazy, które wracają do Ciebie bez kontroli, dotyczące tego zdarzenia?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('q2')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('q2')">Nie</button>
                     </div>
-                </div>
-
-                <div id="screen-q2" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
-                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 2 z 5</div>
-                    <div class="question">Czy masz koszmary senne o tym zdarzeniu?</div>
-                    <div class="answer-buttons">
-                        <button class="answer-btn" onclick="showScreen('q3')">TAK</button>
-                        <button class="answer-btn" onclick="showScreen('q3')">NIE</button>
-                    </div>
-                    <div style="display:flex;gap:12px">
-                        <button class="btn-secondary" onclick="showScreen('q1')">← Wstecz</button>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showScreen('trauma')">Wstecz</button>
                     </div>
                 </div>
 
-                <div id="screen-q3" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
-                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 3 z 5</div>
-                    <div class="question">Czy czujesz się nagle, jakby to zdarzenie działo się znowu lub widzisz je ponownie?</div>
-                    <div class="answer-buttons">
-                        <button class="answer-btn" onclick="showScreen('q4')">TAK</button>
-                        <button class="answer-btn" onclick="showScreen('q4')">NIE</button>
+                <div id="screen-q2" class="hidden fade-in">
+                    <div class="progress-container">
+                        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+                        <div class="progress-text">Pytanie 2 z 5</div>
                     </div>
-                    <div style="display:flex;gap:12px">
-                        <button class="btn-secondary" onclick="showScreen('q2')">← Wstecz</button>
+                    <p class="question">Czy masz koszmary senne o tym zdarzeniu?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('q3')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('q3')">Nie</button>
                     </div>
-                </div>
-
-                <div id="screen-q4" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
-                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 4 z 5</div>
-                    <div class="question">Czy czujesz się bardzo zaniepokojony/a, gdy coś przypomina Ci o tym zdarzeniu?</div>
-                    <div class="answer-buttons">
-                        <button class="answer-btn" onclick="showScreen('q5')">TAK</button>
-                        <button class="answer-btn" onclick="showScreen('q5')">NIE</button>
-                    </div>
-                    <div style="display:flex;gap:12px">
-                        <button class="btn-secondary" onclick="showScreen('q3')">← Wstecz</button>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showScreen('q1')">Wstecz</button>
                     </div>
                 </div>
 
-                <div id="screen-q5" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-                    <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:16px">Pytanie 5 z 5</div>
-                    <div class="question">Czy unikasz myśli, uczuć lub sytuacji, które przypominają Ci o tym zdarzeniu?</div>
-                    <div class="answer-buttons">
-                        <button class="answer-btn" onclick="showScreen('results')">TAK</button>
-                        <button class="answer-btn" onclick="showScreen('results')">NIE</button>
+                <div id="screen-q3" class="hidden fade-in">
+                    <div class="progress-container">
+                        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                        <div class="progress-text">Pytanie 3 z 5</div>
                     </div>
-                    <div style="display:flex;gap:12px">
-                        <button class="btn-secondary" onclick="showScreen('q4')">← Wstecz</button>
+                    <p class="question">Czy czujesz się nagle, jakby to zdarzenie działo się znowu lub widzisz je ponownie?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('q4')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('q4')">Nie</button>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showScreen('q2')">Wstecz</button>
                     </div>
                 </div>
 
-                <div id="screen-results" class="hidden">
-                    <div class="results">
-                        <div class="results-icon">✓</div>
-                        <div class="results-title">Dziękujemy za wypełnienie</div>
-                        <div class="results-message">
-                            <strong>Pamiętaj</strong> – ten kwestionariusz <strong>nie stanowi diagnozy</strong>.<br>
-                            Jeśli masz jakiekolwiek wątpliwości dotyczące swojego zdrowia psychicznego, 
-                            <strong>skonsultuj się z lekarzem, psychiatrą lub psychologiem</strong>.
-                        </div>
-                        <a href="https://przykladowy-link.pl/umow-wizyte" class="results-cta" target="_blank">📅 Umów wizytę</a>
-                        <a href="tel:116123" class="help-link">📞 Telefon zaufania: 116 123</a>
-                        <button onclick="resetApp()" style="background:none;border:none;color:#718096;font-size:14px;cursor:pointer;text-decoration:underline;margin-top:16px">Wypełnij ponownie</button>
+                <div id="screen-q4" class="hidden fade-in">
+                    <div class="progress-container">
+                        <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+                        <div class="progress-text">Pytanie 4 z 5</div>
                     </div>
+                    <p class="question">Czy czujesz się bardzo zaniepokojony/a, gdy coś przypomina Ci o tym zdarzeniu?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('q5')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('q5')">Nie</button>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showScreen('q3')">Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-q5" class="hidden fade-in">
+                    <div class="progress-container">
+                        <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                        <div class="progress-text">Pytanie 5 z 5</div>
+                    </div>
+                    <p class="question">Czy unikasz myśli, uczuć lub sytuacji, które przypominają Ci o tym zdarzeniu?</p>
+                    <div class="answer-grid">
+                        <button class="answer-btn" onclick="showScreen('results')">Tak</button>
+                        <button class="answer-btn" onclick="showScreen('results')">Nie</button>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="showScreen('q4')">Wstecz</button>
+                    </div>
+                </div>
+
+                <div id="screen-results" class="hidden fade-in">
+                    <div class="results-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2 class="results-title">Dziękujemy za wypełnienie</h2>
+                    <div class="results-message">
+                        <strong>Pamiętaj</strong> – ten kwestionariusz <strong>nie stanowi diagnozy</strong>.<br><br>
+                        Jeśli masz jakiekolwiek wątpliwości dotyczące swojego zdrowia psychicznego, <strong>skonsultuj się z lekarzem, psychiatrą lub psychologiem</strong>.
+                    </div>
+                    <a href="https://przykladowy-link.pl/umow-wizyte" class="cta-link" target="_blank">Umów wizytę</a>
+                    <a href="tel:116123" class="secondary-link">Telefon zaufania: 116 123</a>
+                    <button class="restart-btn" onclick="resetApp()">Wypełnij ponownie</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function openModal(){document.getElementById('modal').classList.add('active');showScreen('disclaimer')}
-        function closeModal(){document.getElementById('modal').classList.remove('active')}
+        function openModal(){document.getElementById('modal').classList.add('active');showScreen('disclaimer');document.body.style.overflow='hidden'}
+        function closeModal(){document.getElementById('modal').classList.remove('active');document.body.style.overflow=''}
         function showScreen(id){document.querySelectorAll('[id^="screen-"]').forEach(el=>el.classList.add('hidden'));document.getElementById('screen-'+id)?.classList.remove('hidden')}
         function resetApp(){document.getElementById('accept-check').checked=false;document.getElementById('continue-btn').disabled=true;showScreen('disclaimer')}
-        document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()})
-        document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()})
+        function toggleTheme(){const html=document.documentElement;const current=html.getAttribute('data-theme');const next=current==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('theme',next);updateThemeIcon()}
+        function updateThemeIcon(){const isDark=document.documentElement.getAttribute('data-theme')==='dark';document.getElementById('sun-icon').classList.toggle('hidden',isDark);document.getElementById('moon-icon').classList.toggle('hidden',!isDark)}
+        const savedTheme=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',savedTheme);updateThemeIcon();
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
     </script>
 </body>
 </html>
