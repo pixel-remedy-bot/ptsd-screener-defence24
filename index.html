@@ -2,620 +2,717 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Remedy - PTSD Screening</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Palette - Invisible Luxury */
             --primary: #46b7c6;
-            --primary-dark: #3a9aa7;
-            --primary-light: #5ec5d1;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --bg-gradient-start: #e0f2fe;
-            --bg-gradient-end: #f0f9ff;
+            --primary-soft: rgba(70, 183, 198, 0.08);
+            --primary-glow: rgba(70, 183, 198, 0.25);
+            --bg-body: #fdfdfd;
             --surface: rgba(255, 255, 255, 0.85);
-            --warning: #f59e0b;
-            --success: #059669;
+            --text-main: #111827;
+            --text-secondary: #6B7280;
+            --text-tertiary: #9CA3AF;
+            --border-subtle: rgba(0, 0, 0, 0.04);
+            --shadow-soft: 0 20px 40px -12px rgba(0, 0, 0, 0.06);
+            --shadow-glow: 0 0 80px -20px var(--primary-glow);
+            --radius-l: 32px;
+            --radius-m: 16px;
+            --radius-s: 12px;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        [data-theme="dark"] {
-            --glass-bg: rgba(15, 23, 42, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --bg-gradient-start: #0f172a;
-            --bg-gradient-end: #1e293b;
-            --surface: rgba(30, 41, 59, 0.85);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 50%, var(--bg-gradient-start) 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            /* Ambient background glow */
+            background-image: radial-gradient(circle at 50% 40%, rgba(70, 183, 198, 0.08) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 10%, rgba(70, 183, 198, 0.03) 0%, transparent 40%);
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .card {
-            background: var(--surface);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: var(--glass-shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover { transform: translateY(-2px); }
-
-        .header-logo {
+            width: 100%;
+            max-width: 520px;
+            padding: 16px;
+            /* Reduced outer padding for better mobile usage */
+            perspective: 1000px;
             display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
-            padding: 0 8px;
+            justify-content: center;
         }
 
-        .header-logo svg {
+        /* Card Construction */
+        .card {
+            width: 100%;
+            background: var(--surface);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius-l);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-soft), var(--shadow-glow), 0 0 0 1px rgba(255,255,255,0.6) inset;
+            /* Inner subtle highlight */
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            /* FIX: Ensures progress bar doesn't stick out */
+            /* Mobile Optimization: Scroll if content is too tall */
+            max-height: 85vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .card::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        /* Integrated Header inside Modal */
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .brand-logo {
             width: 48px;
             height: 48px;
-            flex-shrink: 0;
-        }
-
-        .header-brand {
-            font-size: 24px;
-            font-weight: 700;
-            color: #46b7c6;
-            line-height: 1.2;
-        }
-
-        .header-sub {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        h1 {
-            font-size: 26px;
-            font-weight: 700;
             margin-bottom: 12px;
-            line-height: 1.3;
+            filter: drop-shadow(0 4px 12px rgba(70, 183, 198, 0.3));
         }
 
-        .subtitle {
-            font-size: 15px;
+        .brand-name {
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 28px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
+        /* Typography */
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Buttons - Invisible Luxury Style */
         .btn {
             width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 16px 24px;
+            border-radius: var(--radius-m);
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            border: none;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
-            box-shadow: 0 4px 16px rgba(70, 183, 198, 0.35);
+            box-shadow: 0 4px 12px rgba(70, 183, 198, 0.25);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(70, 183, 198, 0.45);
+            background: #399ba8;
+            box-shadow: 0 8px 24px rgba(70, 183, 198, 0.4);
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
         }
 
         .btn-secondary {
-            background: var(--glass-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--glass-border);
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .btn-secondary:hover {
-            background: rgba(70, 183, 198, 0.1);
-            border-color: rgba(70, 183, 198, 0.3);
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-soft);
         }
 
-        .screen { display: none; }
-        .screen.active { display: block; }
-
-        .progress {
-            margin-bottom: 28px;
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            transition: color 0.3s;
         }
 
-        .progress-bar {
-            height: 6px;
-            background: var(--glass-bg);
-            border-radius: 3px;
-            overflow: hidden;
+        .btn-text:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Progress Bar - Minimalist */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            /* Border radius handled by card overflow:hidden */
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 3px;
-            transition: width 0.5s ease;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px var(--primary);
         }
 
-        .progress-text {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
+        /* Questions */
         .question-label {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.1em;
             margin-bottom: 12px;
+            text-align: center;
         }
 
         .question-text {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 500;
-            line-height: 1.6;
-            margin-bottom: 28px;
+            line-height: 1.5;
+            color: var(--text-main);
+            text-align: center;
+            margin-bottom: 32px;
         }
 
-        .trauma-list {
-            background: var(--glass-bg);
-            border-radius: 16px;
-            padding: 24px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        .trauma-list strong {
-            color: var(--text-primary);
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .trauma-list ul {
-            margin: 0 0 0 20px;
-        }
-
-        .trauma-list li {
-            margin-bottom: 8px;
-        }
-
+        /* Answer Grid */
         .answers {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
-        .answer-btn {
-            padding: 14px;
-            border: 2px solid var(--glass-border);
-            background: var(--glass-bg);
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-        }
-
-        .answer-btn:hover {
-            border-color: var(--primary);
-            background: rgba(70, 183, 198, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .disclaimer-box {
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            padding: 20px;
-            margin-bottom: 24px;
-            border-radius: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .disclaimer-box strong {
-            color: var(--text-primary);
-        }
-
+        /* Custom Checkbox - Fixed white checkmark on brand color */
         .checkbox-wrap {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 16px;
             padding: 16px;
-            background: var(--glass-bg);
-            border-radius: 12px;
+            background: #F9FAFB;
+            border-radius: var(--radius-m);
             cursor: pointer;
-            border: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+            margin-bottom: 24px;
         }
 
         .checkbox-wrap:hover {
-            background: rgba(70, 183, 198, 0.08);
+            background: #F3F4F6;
         }
 
         .checkbox-wrap input {
+            appearance: none;
             width: 20px;
             height: 20px;
+            border: 2px solid var(--text-tertiary);
+            border-radius: 6px;
             margin-top: 2px;
-            accent-color: var(--primary);
-            border: 2px solid white;
-            border-radius: 4px;
+            display: grid;
+            place-content: center;
+            flex-shrink: 0;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        /* White checkmark using SVG background */
+        .checkbox-wrap input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-wrap input:checked::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .checkbox-wrap span {
-            font-size: 14px;
-            color: var(--text-primary);
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
         }
 
-        .nav-back {
-            margin-top: 24px;
-            text-align: center;
+        /* Disclaimer */
+        .disclaimer-box {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: #FFF;
+            padding: 16px;
+            border-radius: var(--radius-s);
+            margin-bottom: 16px;
+            border-left: 3px solid var(--primary);
         }
 
+        .disclaimer-alert {
+            font-size: 13px;
+            color: #B91C1C;
+            background: #FEF2F2;
+            padding: 16px;
+            border-radius: var(--radius-s);
+            margin-bottom: 24px;
+            border-left: 3px solid #EF4444;
+        }
+
+        /* Trauma List */
+        .trauma-list {
+            background: #FAFAFA;
+            padding: 20px;
+            border-radius: var(--radius-m);
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .trauma-list ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .trauma-list li {
+            margin-bottom: 6px;
+        }
+
+        /* Animations */
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            /* Smooth fade only */
+        }
+
+        .screen.active {
+            display: block;
+            /* Opacity will be handled via .visible class to ensure transition works */
+        }
+
+        .screen.visible {
+            opacity: 1;
+        }
+
+        /* Results Styles */
         .result-icon {
-            width: 80px;
-            height: 80px;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .result-icon.success {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
-        }
-
-        .result-icon.warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
         }
 
         .result-icon svg {
-            width: 40px;
-            height: 40px;
-            stroke: currentColor;
+            width: 28px;
+            height: 28px;
             stroke-width: 2.5;
-            fill: none;
         }
 
-        .result-title {
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 20px;
+        .result-icon.warning {
+            background: #FEF3C7;
+            color: #D97706;
         }
 
-        .result-box {
-            background: var(--glass-bg);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        .result-box strong {
-            color: var(--text-primary);
-            font-size: 18px;
-        }
-
-        .stop-here {
-            background: var(--glass-bg);
-            border: 2px dashed var(--glass-border);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-        }
-
-        .stop-here-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .stop-here-text {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .result-icon.success {
+            background: #D1FAE5;
+            color: #059669;
         }
 
         .footer-note {
+            font-size: 11px;
             text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 32px;
+            color: var(--text-tertiary);
+            margin-top: 24px;
         }
 
-        .hidden { display: none !important; }
+        /* New Result Actions Styles */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
 
-        @media (max-width: 640px) {
-            .container { padding: 70px 16px 20px; }
-            .card { padding: 24px 20px; border-radius: 20px; }
-            .answers { grid-template-columns: 1fr; }
-            h1 { font-size: 22px; }
+        .discount-box {
+            background: rgba(70, 183, 198, 0.06);
+            border: 1px dashed rgba(70, 183, 198, 0.3);
+            border-radius: var(--radius-m);
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .discount-code {
+            display: inline-block;
+            background: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+            margin: 6px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .discount-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .answers {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-logo">
-            <svg width="48" height="48" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2">
-                <g transform="matrix(1,0,0,1,-11976,-39791)">
-                    <g transform="matrix(0.0071,0,0,0.0071,11976.8,39791.7)">
-                        <rect x="0" y="0" width="8333.33" height="8333.33" style="fill:none"/>
-                        <clipPath id="_clip1_saved">
-                            <rect x="0" y="0" width="8333.33" height="8333.33"/>
-                        </clipPath>
-                        <g clip-path="url(#_clip1_saved)">
-                            <g transform="matrix(34.5223,0,0,34.5223,-9340.42,-30355.4)">
-                                <g transform="matrix(0.0445642,0,0,0.0445642,270.562,-383.355)">
-                                    <path d="M4791.67,30041.6C4791.67,29356.8 4224.22,28891 3638.37,28891L1190.78,28891L1190.78,29254.8L3638.37,29254.8C4122.37,29254.8 4421.56,29617.5 4421.56,30041.6C4421.56,30465.8 4122.37,30824.6 3638.37,30824.6L2435.27,30824.6L2435.27,31188.1L2633.59,31188.1L4107.28,33192.3L4531.33,33192.3L3079.39,31188.1L3638.37,31188.1C4224.22,31188.1 4791.67,30726.4 4791.67,30041.6ZM1547.34,30825.1L1547.34,30266.4L1183.67,30266.4L1183.67,30825.1L625,30825.1L625,31188.8L1183.67,31188.8L1183.67,31747.4L1547.34,31747.4L1547.34,31188.8L2106.01,31188.8L2106.01,30825.1L1547.34,30825.1Z" style="fill:rgb(71,183,198);fill-rule:nonzero"/>
+        <!-- Main Card Container -->
+        <div class="card">
+            <!-- Integrated Progress Bar (Hidden on Start) -->
+            <div id="global-progress" class="progress-container" style="opacity: 0;">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <!-- Header inside Modal -->
+            <div class="modal-header">
+                <div class="brand-logo">
+                    <!-- SVG untouched as requested -->
+                    <svg width="100%" height="100%" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2">
+                        <g transform="matrix(1,0,0,1,-11976,-39791)">
+                            <g transform="matrix(0.0071,0,0,0.0071,11976.8,39791.7)">
+                                <rect x="0" y="0" width="8333.33" height="8333.33" style="fill:none"/>
+                                <clipPath id="_clip1_saved">
+                                    <rect x="0" y="0" width="8333.33" height="8333.33"/>
+                                </clipPath>
+                                <g clip-path="url(#_clip1_saved)">
+                                    <g transform="matrix(34.5223,0,0,34.5223,-9340.42,-30355.4)">
+                                        <g transform="matrix(0.0445642,0,0,0.0445642,270.562,-383.355)">
+                                            <path d="M4791.67,30041.6C4791.67,29356.8 4224.22,28891 3638.37,28891L1190.78,28891L1190.78,29254.8L3638.37,29254.8C4122.37,29254.8 4421.56,29617.5 4421.56,30041.6C4421.56,30465.8 4122.37,30824.6 3638.37,30824.6L2435.27,30824.6L2435.27,31188.1L2633.59,31188.1L4107.28,33192.3L4531.33,33192.3L3079.39,31188.1L3638.37,31188.1C4224.22,31188.1 4791.67,30726.4 4791.67,30041.6ZM1547.34,30825.1L1547.34,30266.4L1183.67,30266.4L1183.67,30825.1L625,30825.1L625,31188.8L1183.67,31188.8L1183.67,31747.4L1547.34,31747.4L1547.34,31188.8L2106.01,31188.8L2106.01,30825.1L1547.34,30825.1Z" style="fill:rgb(71,183,198);fill-rule:nonzero"/>
+                                        </g>
+                                    </g>
                                 </g>
                             </g>
                         </g>
-                    </g>
-                </g>
-            </svg>
-            <div class="header-text">
-                <div class="header-brand">Remedy</div>
-                <div class="header-sub">Centrum Psychiatrii i Psychoterapii</div>
-            </div>
-        </div>
-        <!-- START -->
-        <div id="screen-start" class="screen active">
-            <div class="card">
-                <h1>Screening PTSD dla służb mundurowych</h1>
-                <p class="subtitle">
-                    Krótkie narzędzie przesiewowe do oceny ryzyka zaburzenia stresu pourazowego. 
-                    Skierowane do żołnierzy, policjantów, strażaków i innych służb operacyjnych.
-                </p>
-                <button class="btn btn-primary" onclick="startScreening()">Rozpocznij screening</button>
-            </div>
-            <p class="footer-note">
-                Narzędzie PC-PTSD-5 opracowane przez National Center for PTSD<br>
-                Nie stanowi diagnozy medycznej
-            </p>
-        </div>
-
-        <!-- DISCLAIMER -->
-        <div id="screen-disclaimer" class="screen">
-            <div class="card">
-                <div class="disclaimer-box">
-                    <strong>Uwaga:</strong> To narzędzie ma charakter wyłącznie informacyjny. 
-                    Nie stanowi diagnozy medycznej ani nie zastępuje konsultacji z lekarzem.
+                    </svg>
                 </div>
-                <div class="disclaimer-box" style="background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.3);">
-                    <strong>Kryzys:</strong> Jeśli masz myśli samobójcze - zadzwoń na 112 lub 116 123.
+                <div class="brand-name">Centrum Psychiatrii i Psychoterapii Remedy</div>
+            </div>
+
+            <!-- START -->
+            <div id="screen-start" class="screen active visible">
+                <h1>Screening PTSD<br>dla służb mundurowych</h1>
+                <p class="subtitle">
+                    Poufne narzędzie przesiewowe do wstępnej oceny ryzyka. Skierowane do personelu operacyjnego.
+                </p>
+                <button class="btn btn-primary" onclick="startScreening()">Rozpocznij</button>
+                <div class="footer-note">PC-PTSD-5 / National Center for PTSD</div>
+            </div>
+
+            <!-- DISCLAIMER -->
+            <div id="screen-disclaimer" class="screen">
+                <div class="disclaimer-box">
+                    <strong>Nota prawna:</strong> Narzędzie ma charakter informacyjny. Nie stanowi diagnozy medycznej.
+                </div>
+                <div class="disclaimer-alert">
+                    <strong>Kryzys:</strong> Myśli samobójcze? Zadzwoń: 112 lub 116 123.
                 </div>
                 <label class="checkbox-wrap">
-                    <input type="checkbox" id="accept-check" onchange="document.getElementById('btn-continue').disabled = !this.checked">
-                    <span>Rozumiem, że to narzędzie screeningowe nie zastępuje badania lekarskiego.</span>
+                    <input type="checkbox" id="accept-check">
+                    <span>Rozumiem, że to tylko screening i nie zastępuje lekarza.</span>
                 </label>
-                <button id="btn-continue" class="btn btn-primary" onclick="showScreen('criterion-a')" disabled>Kontynuuj</button>
+                <button id="btn-continue" class="btn btn-primary" style="opacity: 0.5; pointer-events: none;" onclick="showScreen('criterion-a')">Kontynuuj</button>
             </div>
-        </div>
 
-        <!-- CRITERION A -->
-        <div id="screen-criterion-a" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-                    <div class="progress-text">Pytanie wstępne</div>
-                </div>
-                <div class="question-label">Kryterium A - Ekspozycja na traumę</div>
+            <!-- CRITERION A -->
+            <div id="screen-criterion-a" class="screen">
+                <div class="question-label">Krok 1 / 2</div>
+                <h1>Ekspozycja na traumę</h1>
                 <div class="question-text">
-                    Czy kiedykolwiek doświadczyłeś/aś zdarzenia, które było wyjątkowo przerażające, okropne lub traumatyczne?
+                    Czy kiedykolwiek doświadczyłeś/aś zdarzenia, które było wyjątkowo przerażające lub zagrażające życiu?
                 </div>
                 <div class="trauma-list">
-                    <strong>Na przykład:</strong>
+                    <strong>Przykłady:</strong>
                     <ul>
-                        <li>Poważny wypadek lub pożar</li>
-                        <li>Napad fizyczny lub seksualny</li>
-                        <li>Katastrofa naturalna (trzęsienie ziemi, powódź)</li>
-                        <li>Działania wojenne lub walka</li>
-                        <li>Widok śmierci lub poważnych obrażeń</li>
-                        <li>Śmierć bliskiej osoby w wyniku morderstwa lub samobójstwa</li>
+                        <li>Wypadek, pożar, katastrofa</li>
+                        <li>Napaść fizyczna lub seksualna</li>
+                        <li>Działania wojenne, służba na misji</li>
+                        <li>Widok śmierci lub drastycznych obrażeń</li>
                     </ul>
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="showScreen('q1')">Tak</button>
-                    <button class="answer-btn" onclick="showScreen('no-trauma')">Nie</button>
+                    <button class="btn btn-secondary" onclick="showScreen('no-trauma')">Nie</button>
+                    <button class="btn btn-primary" onclick="showScreen('q1')">Tak</button>
                 </div>
             </div>
-        </div>
 
-        <!-- NO TRAUMA -->
-        <div id="screen-no-trauma" class="screen">
-            <div class="card">
-                <div class="stop-here">
-                    <div class="stop-here-title">Screening zakończony</div>
-                    <div class="stop-here-text">
-                        Bez doświadczenia zdarzenia traumatycznego (Kryterium A) ryzyko PTSD jest minimalne.<br><br>
-                        <strong>Wynik: 0/5</strong>
+            <!-- NO TRAUMA -->
+            <div id="screen-no-trauma" class="screen">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div class="result-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
+                    <h1>Niskie ryzyko</h1>
+                    <p class="subtitle">
+                        Bez kryterium A (ekspozycja na traumę) ryzyko PTSD jest minimalne.
+                        <br><strong>Wynik: 0/5</strong>
+                    </p>
+                    <button class="btn btn-secondary" onclick="location.reload()">Wróć na start</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Q1 -->
-        <div id="screen-q1" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 20%"></div></div>
-                    <div class="progress-text">Pytanie 1 z 5</div>
-                </div>
-                <div class="question-label">W ostatnim miesiącu...</div>
+            <!-- Q1 -->
+            <div id="screen-q1" class="screen">
+                <div class="question-label">Ostatni miesiąc</div>
                 <div class="question-text">
                     Czy miewasz koszmary senne o tym zdarzeniu lub myślisz o nim, kiedy nie chcesz?
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="answer(1, true)">Tak</button>
-                    <button class="answer-btn" onclick="answer(1, false)">Nie</button>
+                    <button class="btn btn-secondary" onclick="answer(1, false)">Nie</button>
+                    <button class="btn btn-primary" onclick="answer(1, true)">Tak</button>
                 </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="showScreen('criterion-a')">Wstecz</button>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn-text" onclick="showScreen('criterion-a')">Wróć</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Q2 -->
-        <div id="screen-q2" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
-                    <div class="progress-text">Pytanie 2 z 5</div>
-                </div>
-                <div class="question-label">W ostatnim miesiącu...</div>
+            <!-- Q2 -->
+            <div id="screen-q2" class="screen">
+                <div class="question-label">Ostatni miesiąc</div>
                 <div class="question-text">
                     Czy starasz się celowo nie myśleć o zdarzeniu lub unikasz sytuacji, które Ci o nim przypominają?
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="answer(2, true)">Tak</button>
-                    <button class="answer-btn" onclick="answer(2, false)">Nie</button>
+                    <button class="btn btn-secondary" onclick="answer(2, false)">Nie</button>
+                    <button class="btn btn-primary" onclick="answer(2, true)">Tak</button>
                 </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="showScreen('q1')">Wstecz</button>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn-text" onclick="showScreen('q1')">Wróć</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Q3 -->
-        <div id="screen-q3" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div>
-                    <div class="progress-text">Pytanie 3 z 5</div>
-                </div>
-                <div class="question-label">W ostatnim miesiącu...</div>
+            <!-- Q3 -->
+            <div id="screen-q3" class="screen">
+                <div class="question-label">Ostatni miesiąc</div>
                 <div class="question-text">
                     Czy jesteś ciągle czujny, wyczulony na niebezpieczeństwo lub łatwo się wystraszysz?
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="answer(3, true)">Tak</button>
-                    <button class="answer-btn" onclick="answer(3, false)">Nie</button>
+                    <button class="btn btn-secondary" onclick="answer(3, false)">Nie</button>
+                    <button class="btn btn-primary" onclick="answer(3, true)">Tak</button>
                 </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="showScreen('q2')">Wstecz</button>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn-text" onclick="showScreen('q2')">Wróć</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Q4 -->
-        <div id="screen-q4" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
-                    <div class="progress-text">Pytanie 4 z 5</div>
-                </div>
-                <div class="question-label">W ostatnim miesiącu...</div>
+            <!-- Q4 -->
+            <div id="screen-q4" class="screen">
+                <div class="question-label">Ostatni miesiąc</div>
                 <div class="question-text">
-                    Czy czujesz się odczuć od innych ludzi, aktywności lub swojego otoczenia?
+                    Czy czujesz się odcięty/a od innych ludzi, aktywności lub swojego otoczenia?
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="answer(4, true)">Tak</button>
-                    <button class="answer-btn" onclick="answer(4, false)">Nie</button>
+                    <button class="btn btn-secondary" onclick="answer(4, false)">Nie</button>
+                    <button class="btn btn-primary" onclick="answer(4, true)">Tak</button>
                 </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="showScreen('q3')">Wstecz</button>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn-text" onclick="showScreen('q3')">Wróć</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Q5 -->
-        <div id="screen-q5" class="screen">
-            <div class="card">
-                <div class="progress">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
-                    <div class="progress-text">Pytanie 5 z 5</div>
-                </div>
-                <div class="question-label">W ostatnim miesiącu...</div>
+            <!-- Q5 -->
+            <div id="screen-q5" class="screen">
+                <div class="question-label">Ostatni miesiąc</div>
                 <div class="question-text">
                     Czy czujesz się winny/a lub nie możesz przestać obwiniać siebie lub innych o zdarzenie?
                 </div>
                 <div class="answers">
-                    <button class="answer-btn" onclick="answer(5, true)">Tak</button>
-                    <button class="answer-btn" onclick="answer(5, false)">Nie</button>
+                    <button class="btn btn-secondary" onclick="answer(5, false)">Nie</button>
+                    <button class="btn btn-primary" onclick="answer(5, true)">Tak</button>
                 </div>
-                <div class="nav-back">
-                    <button class="btn btn-secondary" onclick="showScreen('q4')">Wstecz</button>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn-text" onclick="showScreen('q4')">Wróć</button>
                 </div>
             </div>
-        </div>
 
-        <!-- RESULT -->
-        <div id="screen-result" class="screen">
-            <div class="card" id="result-card"></div>
+            <!-- RESULT -->
+            <div id="screen-result" class="screen">
+                <div id="result-content"></div>
+            </div>
         </div>
     </div>
 
     <script>
         let answers = {};
+        const totalQuestions = 5;
+        let isAnimating = false;
+
+        // Checkbox handler
+        document.getElementById('accept-check').addEventListener('change', function() {
+            const btn = document.getElementById('btn-continue');
+            if(this.checked) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'all';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+            }
+        });
 
         function startScreening() {
             showScreen('disclaimer');
         }
 
+        function updateProgress(step) {
+            const bar = document.getElementById('global-progress');
+            const fill = document.getElementById('progress-fill');
+            if (step === 0) {
+                bar.style.opacity = '0';
+            } else {
+                bar.style.opacity = '1';
+                // Calculate percentage based on 5 main questions
+                // Q1 starts at 20%
+                let percentage = (step / totalQuestions) * 100;
+                if(percentage > 100) percentage = 100;
+                fill.style.width = percentage + '%';
+            }
+        }
+
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-' + id).classList.add('active');
-            window.scrollTo(0, 0);
+            if (isAnimating) return; // Prevent double clicks mess
+
+            const current = document.querySelector('.screen.visible');
+            const next = document.getElementById('screen-' + id);
+
+            // Progress Bar Logic (Instant update for snappiness)
+            if(id.startsWith('q')) {
+                const qNum = parseInt(id.replace('q', ''));
+                updateProgress(qNum);
+            } else if (id === 'result') {
+                updateProgress(5);
+            } else {
+                updateProgress(0);
+            }
+
+            if (current) {
+                isAnimating = true;
+                // 1. Fade OUT
+                current.classList.remove('visible');
+                // 2. Wait for fade out transition (300ms match CSS)
+                setTimeout(() => {
+                    current.classList.remove('active');
+                    // 3. Setup Next
+                    next.classList.add('active');
+                    // Force reflow to ensure browser realizes display is block before adding opacity
+                    void next.offsetWidth;
+                    // 4. Fade IN
+                    next.classList.add('visible');
+                    // Reset lock after transition
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 300);
+                }, 300);
+            } else {
+                // First load
+                next.classList.add('active');
+                requestAnimationFrame(() => {
+                    next.classList.add('visible');
+                });
+            }
         }
 
         function answer(q, value) {
             answers[q] = value;
-            if (q < 5) {
+            if (q < totalQuestions) {
                 showScreen('q' + (q + 1));
             } else {
                 showResults();
@@ -624,37 +721,53 @@
 
         function showResults() {
             const score = Object.values(answers).filter(a => a).length;
-            const card = document.getElementById('result-card');
-            
+            const container = document.getElementById('result-content');
+            let html = '';
+
+            // DISCOUNT INFO
+            const discountHtml = `
+                <div class="discount-box">
+                    <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Zniżka -50 zł na pierwszą wizytę</div>
+                    <div class="discount-code">defence24</div>
+                    <div class="discount-text">
+                        Podaj hasło przy rezerwacji online lub telefonicznie.
+                    </div>
+                </div>
+            `;
+
             if (score >= 3) {
-                card.innerHTML = `
+                html = `
                     <div class="result-icon warning">
-                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     </div>
-                    <h2 class="result-title">Zalecana konsultacja</h2>
-                    <div class="result-box">
-                        <strong>Wynik: ${score}/5 odpowiedzi pozytywnych</strong><br><br>
-                        Na podstawie Twoich odpowiedzi zalecamy konsultację z psychiatrą lub psychologiem.
-                        Nie oznacza to diagnozy, ale warto porozmawiać ze specjalistą.
+                    <h1>Zalecana konsultacja</h1>
+                    <p class="subtitle" style="margin-bottom:20px;">
+                        Wynik: <strong>${score}/5</strong>. Wskazuje na podwyższone ryzyko PTSD.
+                    </p>
+                    ${discountHtml}
+                    <div class="action-container">
+                        <a href="https://remedy.com.pl/booking" target="_blank" class="btn btn-primary">Umów Wizytę</a>
+                        <a href="tel:+48724733713" class="btn btn-secondary">Zadzwoń: 724 733 713</a>
                     </div>
-                    <a href="tel:116123" class="btn btn-primary" style="margin-bottom: 12px; display: block; text-align: center; text-decoration: none;">Telefon Zaufania: 116 123</a>
-                    <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
+                    <button class="btn-text" onclick="location.reload()">Zakończ</button>
                 `;
             } else {
-                card.innerHTML = `
+                html = `
                     <div class="result-icon success">
-                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <h2 class="result-title">Screening ukończony</h2>
-                    <div class="result-box">
-                        <strong>Wynik: ${score}/5 odpowiedzi pozytywnych</strong><br><br>
-                        Twój wynik nie wskazuje na podwyższone ryzyko PTSD.
-                        Jeśli jednak masz wątpliwości, skonsultuj się z lekarzem.
+                    <h1>Wynik w normie</h1>
+                    <p class="subtitle" style="margin-bottom:20px;">
+                        Wynik: <strong>${score}/5</strong>. Nie wskazuje na ryzyko PTSD.
+                    </p>
+                    ${discountHtml}
+                    <div class="action-container">
+                        <a href="https://remedy.com.pl/booking" target="_blank" class="btn btn-primary">Umów Wizytę (Profilaktyka)</a>
                     </div>
-                    <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
+                    <button class="btn-text" onclick="location.reload()">Zakończ</button>
                 `;
             }
-            
+            container.innerHTML = html;
             showScreen('result');
         }
     </script>
