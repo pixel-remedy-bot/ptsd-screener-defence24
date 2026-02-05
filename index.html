@@ -5,198 +5,248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Remedy - PTSD Screening</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #46b7c6;
             --primary-dark: #3a9aa7;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #0f172a;
+            --primary-light: #5ec5d1;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #64748b;
-            --border: #e2e8f0;
+            --bg-gradient-start: #e0f2fe;
+            --bg-gradient-end: #f0f9ff;
+            --surface: rgba(255, 255, 255, 0.85);
             --warning: #f59e0b;
-            --danger: #dc2626;
             --success: #059669;
         }
 
         [data-theme="dark"] {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #334155;
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
+            --surface: rgba(30, 41, 59, 0.85);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 50%, var(--bg-gradient-start) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo svg {
-            width: 40px;
-            height: 40px;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 32px;
-            margin-bottom: 20px;
-        }
-
-        .banner-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-
-        .banner-subtitle {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background: var(--bg);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .crisis-bar {
-            background: #dc2626;
+            background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
             color: white;
             padding: 12px 20px;
             text-align: center;
             font-size: 14px;
             font-weight: 500;
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             display: none;
+            backdrop-filter: blur(10px);
         }
 
-        .crisis-bar.active {
-            display: block;
+        .crisis-bar.active { display: block; }
+        .crisis-bar a { color: white; text-decoration: underline; font-weight: 700; }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
         }
 
-        .crisis-bar a {
-            color: white;
-            text-decoration: underline;
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-2px); }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .logo svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        .logo-text {
+            font-size: 22px;
             font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .screen {
-            display: none;
+        .theme-toggle {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--glass-shadow);
+            z-index: 100;
+            font-size: 20px;
         }
 
-        .screen.active {
-            display: block;
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
         }
 
-        .question-box {
-            margin-bottom: 32px;
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(70, 183, 198, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(70, 183, 198, 0.45);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(70, 183, 198, 0.1);
+            border-color: rgba(70, 183, 198, 0.3);
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        .progress {
+            margin-bottom: 28px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--glass-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-weight: 500;
         }
 
         .question-label {
             font-size: 12px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
 
         .question-text {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 500;
             line-height: 1.6;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .trauma-list {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 24px;
             margin: 20px 0;
             font-size: 14px;
             color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .trauma-list strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 12px;
         }
 
         .trauma-list ul {
-            margin: 12px 0 0 20px;
+            margin: 0 0 0 20px;
         }
 
         .trauma-list li {
@@ -204,62 +254,43 @@
         }
 
         .answers {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
         .answer-btn {
-            flex: 1;
-            padding: 16px 24px;
-            border: 2px solid var(--border);
-            background: var(--card);
-            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid var(--glass-border);
+            background: var(--glass-bg);
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 15px;
+            text-align: center;
             font-weight: 600;
-            color: var(--text);
-            transition: all 0.2s;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
         }
 
         .answer-btn:hover {
             border-color: var(--primary);
-            background: rgba(70, 183, 198, 0.05);
-        }
-
-        .progress {
-            margin-bottom: 32px;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
-
-        .progress-text {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 8px;
+            background: rgba(70, 183, 198, 0.08);
+            transform: translateY(-2px);
         }
 
         .disclaimer-box {
-            background: #fef3c7;
+            background: rgba(245, 158, 11, 0.08);
             border-left: 4px solid var(--warning);
-            padding: 16px 20px;
+            padding: 20px;
             margin-bottom: 24px;
+            border-radius: 0 16px 16px 0;
             font-size: 14px;
             color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        [data-theme="dark"] .disclaimer-box {
-            background: rgba(245, 158, 11, 0.1);
+        .disclaimer-box strong {
+            color: var(--text-primary);
         }
 
         .checkbox-wrap {
@@ -267,7 +298,15 @@
             align-items: flex-start;
             gap: 12px;
             margin-bottom: 24px;
+            padding: 16px;
+            background: var(--glass-bg);
+            border-radius: 12px;
             cursor: pointer;
+            border: 1px solid var(--glass-border);
+        }
+
+        .checkbox-wrap:hover {
+            background: rgba(70, 183, 198, 0.08);
         }
 
         .checkbox-wrap input {
@@ -279,79 +318,7 @@
 
         .checkbox-wrap span {
             font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .result-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-        }
-
-        .result-icon.success {
-            background: rgba(5, 150, 105, 0.1);
-            color: var(--success);
-        }
-
-        .result-icon.warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .result-title {
-            font-size: 22px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .result-text {
-            font-size: 15px;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 24px;
-            line-height: 1.7;
-        }
-
-        .result-box {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .result-box strong {
-            color: var(--text);
-        }
-
-        .btn-full {
-            width: 100%;
-            margin-bottom: 12px;
-        }
-
-        .stop-here {
-            background: var(--bg);
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            text-align: center;
-            margin-top: 24px;
-        }
-
-        .stop-here-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .stop-here-text {
-            font-size: 14px;
-            color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
         .nav-back {
@@ -359,18 +326,93 @@
             text-align: center;
         }
 
+        .result-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .result-icon.success {
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
+            color: white;
+        }
+
+        .result-icon.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .result-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .result-box strong {
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+
+        .stop-here {
+            background: var(--glass-bg);
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .stop-here-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .stop-here-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
         .footer-note {
             text-align: center;
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: 40px;
+            margin-top: 32px;
         }
 
+        .hidden { display: none !important; }
+
         @media (max-width: 640px) {
-            .container { padding: 20px 16px; }
-            .card { padding: 24px 20px; }
-            .banner-title { font-size: 20px; }
-            .answers { flex-direction: column; }
+            .container { padding: 70px 16px 20px; }
+            .card { padding: 24px 20px; border-radius: 20px; }
+            .answers { grid-template-columns: 1fr; }
+            h1 { font-size: 22px; }
         }
     </style>
 </head>
@@ -379,37 +421,37 @@
         Masz myśli samobójcze? <a href="tel:116123">Zadzwoń 116 123</a> lub <a href="tel:112">112</a>
     </div>
 
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <svg viewBox="0 0 100 100" fill="none">
-                    <rect width="100" height="100" rx="20" fill="url(#grad)"/>
-                    <path d="M35 50 L45 35 L55 50 L65 35 L65 65 L55 50 L45 65 L35 50" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <defs>
-                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#46b7c6"/>
-                            <stop offset="100%" style="stop-color:#3a9aa7"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <span class="logo-text">Remedy</span>
-            </div>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-        </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw">
+        <span id="theme-icon">🌙</span>
+    </button>
 
-        <!-- BANNER / START -->
+    <div class="container">
+        <!-- START -->
         <div id="screen-start" class="screen active">
             <div class="card">
-                <h1 class="banner-title">Screening PTSD dla służb mundurowych</h1>
-                <p class="banner-subtitle">
+                <div class="logo">
+                    <svg viewBox="0 0 100 100" fill="none">
+                        <rect width="100" height="100" rx="20" fill="url(#logoGrad)"/>
+                        <path d="M35 50 L45 35 L55 50 L65 35 L65 65 L55 50 L45 65 L35 50" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#46b7c6"/>
+                                <stop offset="100%" style="stop-color:#3a9aa7"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">Remedy</span>
+                </div>
+                <h1>Screening PTSD dla służb mundurowych</h1>
+                <p class="subtitle">
                     Krótkie narzędzie przesiewowe do oceny ryzyka zaburzenia stresu pourazowego. 
                     Skierowane do żołnierzy, policjantów, strażaków i innych służb operacyjnych.
                 </p>
                 <button class="btn btn-primary" onclick="startScreening()">Rozpocznij screening</button>
             </div>
             <p class="footer-note">
-                Narzędzie PC-PTSD-5 na podstawie kwestionariusza National Center for PTSD (USA).<br>
-                Nie stanowi diagnozy medycznej. Nie zastępuje konsultacji z psychiatrą.
+                Narzędzie PC-PTSD-5 opracowane przez National Center for PTSD<br>
+                Nie stanowi diagnozy medycznej
             </p>
         </div>
 
@@ -417,12 +459,11 @@
         <div id="screen-disclaimer" class="screen">
             <div class="card">
                 <div class="disclaimer-box">
-                    <strong>Uwaga prawna:</strong> To narzędzie ma charakter wyłącznie informacyjny i edukacyjny. 
-                    Nie stanowi diagnozy medycznej ani nie zastępuje konsultacji z lekarzem, psychiatrą ani psychologiem. 
-                    Nie zapisujemy żadnych danych. Wyniki są widoczne tylko dla Ciebie.
+                    <strong>Uwaga:</strong> To narzędzie ma charakter wyłącznie informacyjny. 
+                    Nie stanowi diagnozy medycznej ani nie zastępuje konsultacji z lekarzem.
                 </div>
-                <div class="disclaimer-box" style="background: rgba(220, 38, 38, 0.1); border-color: #dc2626;">
-                    <strong>Jeśli masz myśli samobójcze:</strong> Natychmiast zadzwoń na numer alarmowy 112 lub Telefon Zaufania 116 123.
+                <div class="disclaimer-box" style="background: rgba(220, 38, 38, 0.08); border-color: #dc2626;">
+                    <strong>Kryzys:</strong> Jeśli masz myśli samobójcze - zadzwoń na 112 lub 116 123.
                 </div>
                 <label class="checkbox-wrap">
                     <input type="checkbox" id="accept-check" onchange="document.getElementById('btn-continue').disabled = !this.checked">
@@ -432,32 +473,28 @@
             </div>
         </div>
 
-        <!-- CRITERION A - TRAUMA CHECK -->
+        <!-- CRITERION A -->
         <div id="screen-criterion-a" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
                     <div class="progress-text">Pytanie wstępne</div>
                 </div>
-
-                <div class="question-box">
-                    <div class="question-label">Kryterium A - Ekspozycja na traumę</div>
-                    <div class="question-text">
-                        Czy kiedykolwiek doświadczyłeś/aś zdarzenia, które było wyjątkowo przerażające, okropne lub traumatyczne?
-                    </div>
-                    <div class="trauma-list">
-                        Na przykład:
-                        <ul>
-                            <li>Poważny wypadek lub pożar</li>
-                            <li>Napad fizyczny lub seksualny</li>
-                            <li>Katastrofa naturalna (trzęsienie ziemi, powódź)</li>
-                            <li>Działania wojenne lub walka</li>
-                            <li>Widok śmierci lub poważnych obrażeń innej osoby</li>
-                            <li>Śmierć bliskiej osoby w wyniku morderstwa lub samobójstwa</li>
-                        </ul>
-                    </div>
+                <div class="question-label">Kryterium A - Ekspozycja na traumę</div>
+                <div class="question-text">
+                    Czy kiedykolwiek doświadczyłeś/aś zdarzenia, które było wyjątkowo przerażające, okropne lub traumatyczne?
                 </div>
-
+                <div class="trauma-list">
+                    <strong>Na przykład:</strong>
+                    <ul>
+                        <li>Poważny wypadek lub pożar</li>
+                        <li>Napad fizyczny lub seksualny</li>
+                        <li>Katastrofa naturalna (trzęsienie ziemi, powódź)</li>
+                        <li>Działania wojenne lub walka</li>
+                        <li>Widok śmierci lub poważnych obrażeń</li>
+                        <li>Śmierć bliskiej osoby w wyniku morderstwa lub samobójstwa</li>
+                    </ul>
+                </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="showScreen('q1')">Tak</button>
                     <button class="answer-btn" onclick="showScreen('no-trauma')">Nie</button>
@@ -465,34 +502,32 @@
             </div>
         </div>
 
-        <!-- NO TRAUMA - STOP HERE -->
+        <!-- NO TRAUMA -->
         <div id="screen-no-trauma" class="screen">
             <div class="card">
                 <div class="stop-here">
                     <div class="stop-here-title">Screening zakończony</div>
                     <div class="stop-here-text">
-                        Bez doświadczenia zdarzenia traumatycznego (Kryterium A) ryzyko PTSD jest minimalne.<br>
-                        Jeśli jednak masz inne problemy ze zdrowiem psychicznym, skonsultuj się z lekarzem.
+                        Bez doświadczenia zdarzenia traumatycznego (Kryterium A) ryzyko PTSD jest minimalne.<br><br>
+                        <strong>Wynik: 0/5</strong>
                     </div>
                 </div>
-                <div style="margin-top: 24px; text-align: center;">
+                <div class="nav-back">
                     <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
                 </div>
             </div>
         </div>
 
-        <!-- QUESTIONS 1-5 -->
+        <!-- Q1 -->
         <div id="screen-q1" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 20%"></div></div>
                     <div class="progress-text">Pytanie 1 z 5</div>
                 </div>
-                <div class="question-box">
-                    <div class="question-label">W ostatnim miesiącu...</div>
-                    <div class="question-text">
-                        Czy miewasz koszmary senne o tym zdarzeniu lub myślisz o nim, kiedy nie chcesz?
-                    </div>
+                <div class="question-label">W ostatnim miesiącu...</div>
+                <div class="question-text">
+                    Czy miewasz koszmary senne o tym zdarzeniu lub myślisz o nim, kiedy nie chcesz?
                 </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="answer(1, true)">Tak</button>
@@ -504,17 +539,16 @@
             </div>
         </div>
 
+        <!-- Q2 -->
         <div id="screen-q2" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
                     <div class="progress-text">Pytanie 2 z 5</div>
                 </div>
-                <div class="question-box">
-                    <div class="question-label">W ostatnim miesiącu...</div>
-                    <div class="question-text">
-                        Czy starasz się celowo nie myśleć o zdarzeniu lub unikasz sytuacji, które Ci o nim przypominają?
-                    </div>
+                <div class="question-label">W ostatnim miesiącu...</div>
+                <div class="question-text">
+                    Czy starasz się celowo nie myśleć o zdarzeniu lub unikasz sytuacji, które Ci o nim przypominają?
                 </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="answer(2, true)">Tak</button>
@@ -526,17 +560,16 @@
             </div>
         </div>
 
+        <!-- Q3 -->
         <div id="screen-q3" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div>
                     <div class="progress-text">Pytanie 3 z 5</div>
                 </div>
-                <div class="question-box">
-                    <div class="question-label">W ostatnim miesiącu...</div>
-                    <div class="question-text">
-                        Czy jesteś ciągle czujny, wyczulony na niebezpieczeństwo lub łatwo się wystraszysz?
-                    </div>
+                <div class="question-label">W ostatnim miesiącu...</div>
+                <div class="question-text">
+                    Czy jesteś ciągle czujny, wyczulony na niebezpieczeństwo lub łatwo się wystraszysz?
                 </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="answer(3, true)">Tak</button>
@@ -548,17 +581,16 @@
             </div>
         </div>
 
+        <!-- Q4 -->
         <div id="screen-q4" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
                     <div class="progress-text">Pytanie 4 z 5</div>
                 </div>
-                <div class="question-box">
-                    <div class="question-label">W ostatnim miesiącu...</div>
-                    <div class="question-text">
-                        Czy czujesz się odczuć od innych ludzi, aktywności lub swojego otoczenia?
-                    </div>
+                <div class="question-label">W ostatnim miesiącu...</div>
+                <div class="question-text">
+                    Czy czujesz się odczuć od innych ludzi, aktywności lub swojego otoczenia?
                 </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="answer(4, true)">Tak</button>
@@ -570,17 +602,16 @@
             </div>
         </div>
 
+        <!-- Q5 -->
         <div id="screen-q5" class="screen">
             <div class="card">
                 <div class="progress">
                     <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
                     <div class="progress-text">Pytanie 5 z 5</div>
                 </div>
-                <div class="question-box">
-                    <div class="question-label">W ostatnim miesiącu...</div>
-                    <div class="question-text">
-                        Czy czujesz się winny/a lub nie możesz przestać obwiniać siebie lub innych o zdarzenie?
-                    </div>
+                <div class="question-label">W ostatnim miesiącu...</div>
+                <div class="question-text">
+                    Czy czujesz się winny/a lub nie możesz przestać obwiniać siebie lub innych o zdarzenie?
                 </div>
                 <div class="answers">
                     <button class="answer-btn" onclick="answer(5, true)">Tak</button>
@@ -592,17 +623,14 @@
             </div>
         </div>
 
-        <!-- RESULTS -->
+        <!-- RESULT -->
         <div id="screen-result" class="screen">
-            <div class="card">
-                <div id="result-content"></div>
-            </div>
+            <div class="card" id="result-card"></div>
         </div>
     </div>
 
     <script>
         let answers = {};
-        let currentQuestion = 0;
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -610,10 +638,14 @@
             const next = current === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
+            document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
         }
 
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
 
         function startScreening() {
             document.getElementById('crisis-bar').classList.add('active');
@@ -637,41 +669,34 @@
 
         function showResults() {
             const score = Object.values(answers).filter(a => a).length;
-            const content = document.getElementById('result-content');
+            const card = document.getElementById('result-card');
             
             if (score >= 3) {
-                content.innerHTML = `
+                card.innerHTML = `
                     <div class="result-icon warning">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                            <line x1="12" y1="9" x2="12" y2="13"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     </div>
-                    <h2 class="result-title">Zalecana konsultacja specjalisty</h2>
+                    <h2 class="result-title">Zalecana konsultacja</h2>
                     <div class="result-box">
                         <strong>Wynik: ${score}/5 odpowiedzi pozytywnych</strong><br><br>
-                        Na podstawie Twoich odpowiedzi zalecamy konsultację z psychiatrą lub psychologiem. 
-                        Nie oznacza to diagnozy, ale warto porozmawiać ze specjalistą o tym, co Cię niepokoi.
+                        Na podstawie Twoich odpowiedzi zalecamy konsultację z psychiatrą lub psychologiem.
+                        Nie oznacza to diagnozy, ale warto porozmawiać ze specjalistą.
                     </div>
-                    <a href="tel:116123" class="btn btn-primary btn-full">Telefon Zaufania: 116 123</a>
-                    <a href="https://www.defence24.pl" class="btn btn-secondary btn-full" target="_blank">Znajdź pomoc na defence24.pl</a>
-                    <button class="btn btn-secondary btn-full" onclick="location.reload()">Wypełnij ponownie</button>
+                    <a href="tel:116123" class="btn btn-primary" style="margin-bottom: 12px; display: block; text-align: center; text-decoration: none;">Telefon Zaufania: 116 123</a>
+                    <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
                 `;
             } else {
-                content.innerHTML = `
+                card.innerHTML = `
                     <div class="result-icon success">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <h2 class="result-title">Screening ukończony</h2>
                     <div class="result-box">
                         <strong>Wynik: ${score}/5 odpowiedzi pozytywnych</strong><br><br>
-                        Twój wynik nie wskazuje na podwyższone ryzyko PTSD. 
-                        Jeśli jednak masz wątpliwości lub źle się czujesz, skonsultuj się z lekarzem.
+                        Twój wynik nie wskazuje na podwyższone ryzyko PTSD.
+                        Jeśli jednak masz wątpliwości, skonsultuj się z lekarzem.
                     </div>
-                    <button class="btn btn-secondary btn-full" onclick="location.reload()">Wypełnij ponownie</button>
+                    <button class="btn btn-secondary" onclick="location.reload()">Wypełnij ponownie</button>
                 `;
             }
             
